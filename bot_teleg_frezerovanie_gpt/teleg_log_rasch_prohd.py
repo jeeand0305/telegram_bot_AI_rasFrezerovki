@@ -30,8 +30,8 @@ print("start", "остались проблемы переключения ме�
 
 @bot.message_handler(commands=['start'])
 def start_message(message):
+    print("start_message")
     bot.send_message(message.chat.id, 'Привет')
-
     markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
     item1 = types.KeyboardButton("Расчитать проход")
     item2 = types.KeyboardButton("Расслабься")
@@ -43,6 +43,7 @@ def start_message(message):
 # функция отбирает не верные данные если строка не может
 # быть float
 def func_otbor_float(dan1):
+    print("func_otbor_float()")
     list_sbor = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "."]
     new_str = ""
     dan_str = str(dan1)
@@ -67,14 +68,12 @@ name_prohod_eng = None
 @bot.message_handler(
     func=lambda message: message.text == "Расчитать проход")
 def button_prohod(message):
-    # global danie_prohoda
-    # global name_prohod
-    # global name_prohod_eng
-    # danie_prohoda_list = []
+    print("button_prohod")
     markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
     paz = types.KeyboardButton("Рассчет паза")
     greben = types.KeyboardButton("Рассчет гребня")
-    markup.add(paz, greben)
+    start_button = types.KeyboardButton("/start")
+    markup.add(paz, greben, start_button)
     bot.send_message(message.chat.id,
                      "Выберете что вам надо",
                      reply_markup=markup)
@@ -100,6 +99,7 @@ def prohod_paza(message):
 @bot.message_handler(
     func=lambda message: message.text == "Рассчет гребня")
 def prohod_grebna(message):
+    print("prohod_grebna")
     global danie_prohoda
     global name_prohod
     global name_prohod_eng
@@ -116,6 +116,7 @@ def prohod_grebna(message):
     func=lambda message:
     message.text not in ["Расслабься", "Спросить ИИ"])
 def prohod_grebna_paz(message):
+    print("prohod_grebna_paz", message.text)
     global danie_prohoda
     global name_prohod
     global name_prohod_eng
@@ -152,29 +153,14 @@ def prohod_grebna_paz(message):
             elif proxod == None:
                 bot.send_message(message.chat.id,
                                  f"Диаметор фрезы больше ширины паза")
+
         # ошибочный ввод
         else:
             bot.send_message(message.chat.id,
                              f"Ошибочный ввод даных поробуйте заново")
 
-
-# раслабься
-@bot.message_handler(
-    func=lambda message: message.text == "Расслабься")
-def porno_linc(message):
-    bot.send_message(message.chat.id, 'http://porno365.scot')
-    return
-
-
-@bot.message_handler(
-    func=lambda message: message.text == "Спросить ИИ")
-def work_ai(message):
-    bot.send_message(message.chat.id,
-                     "Напишите ваш вопрос")
-
-    @bot.message_handler(
-        func=lambda message: message.text != None)
-    def message_reply(message):
+    # work is texts pesponce Ai
+    elif message.text:
         print("bot AI", message.text)
         bot.send_message(message.chat.id,
                          "Дайте мне несколько секунд")
@@ -183,8 +169,38 @@ def work_ai(message):
             bot.send_message(message.chat.id, responce1)
         elif responce1 == "":
             bot.send_message(message.chat.id, "Повторите ваш вопрос")
-            return
-        # роабочий код
+
+
+# раслабься
+@bot.message_handler(
+    func=lambda message: message.text == "Расслабься")
+def porno_linc(message):
+    print("porno_linc")
+    bot.send_message(message.chat.id, 'http://porno365.scot')
+    return
+
+
+@bot.message_handler(
+    func=lambda message: message.text == "Спросить ИИ")
+def work_ai(message):
+    print("work_ai")
+    bot.send_message(message.chat.id,
+                     "Напишите ваш вопрос")
+
+# @bot.message_handler(
+#     func=lambda message: message.text != None)
+# def message_reply(message):
+#     print("message_reply", message.text)
+#     print("bot AI", message.text)
+#     bot.send_message(message.chat.id,
+#                      "Дайте мне несколько секунд")
+#     responce1 = asyncio.run(gpt_conferter.gpt3_text(message.text))
+#     if responce1:
+#         bot.send_message(message.chat.id, responce1)
+#     elif responce1 == "":
+#         bot.send_message(message.chat.id, "Повторите ваш вопрос")
+#         return
+    # роабочий код
 
 
 bot.infinity_polling()
